@@ -2,6 +2,28 @@
 
 ## [Unreleased]
 
+## [2026.09.10-r1] - 2026-09-10
+
+### Changed
+
+- Upgraded SQLite Database Integration from `3.0.1` to `3.0.2`, pinned to
+  upstream commit `085ea60b16c648d40464654afa667f0812c040de`.
+- Included upstream fixes for native numeric schema reconstruction, lexer edge
+  cases and string handling, primary-key prefix lengths and order in `SHOW
+  CREATE TABLE`, and MySQL-compatible savepoint handling.
+
+### Release status
+
+- Prepared as the first immutable release for 2026-09-10. Until its protected
+  tag is published and the two registry indexes, evidence, and signatures are
+  verified, `2026.09.03-r1` remains the current complete release.
+
+### Upgrade notes
+
+- Back up `wp-content/database/` before recreating an existing container. The
+  entrypoint reconciles the updated SQLite drop-in and managed must-use plugin
+  files into persistent document-root volumes without removing site content.
+
 ## [2026.09.03-r1] - 2026-09-03
 
 ### Fixed
@@ -32,9 +54,10 @@
 
 ### Release status
 
-- Prepared as the first immutable release for 2026-09-03. Until its protected
-  tag is published and the two registry indexes, evidence, and signatures are
-  verified, `2026.09.02-r2` remains the current complete release.
+- Published to Docker Hub and GHCR as matching five-platform indexes at
+  `sha256:61c3ac9fa44c28a36dd77415e1563281711134dcb9a9a4979ed601d6039a3812`.
+  Per-platform SBOM and provenance evidence and both registry signatures were
+  verified before the `2026.09.03` and `latest` aliases were promoted.
 
 ### Compatibility notes
 
@@ -282,7 +305,8 @@
 - SQLite Database Integration 3.0.0 uses WAL journaling by default; keep the database, `-wal`, and `-shm` files on the same persistent volume.
 - The native `wp_mysql_parser` extension is built for amd64 and arm64. Other published platforms use the integration's pure-PHP parser fallback.
 
-[Unreleased]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.03-r1...HEAD
+[Unreleased]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.10-r1...HEAD
+[2026.09.10-r1]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.03-r1...2026.09.10-r1
 [2026.09.03-r1]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.02-r2...2026.09.03-r1
 [2026.09.02-r2]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.02-r1...2026.09.02-r2
 [2026.09.02-r1]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.01-r1...2026.09.02-r1

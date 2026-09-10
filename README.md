@@ -5,12 +5,12 @@
 WordPress with SQLite, ready to use out of the box.
 
 <!-- release-availability: pending -->
-> **Container release availability:** `2026.09.03-r1` is prepared but is not
+> **Container release availability:** `2026.09.10-r1` is prepared but is not
 > published yet as a verified container image. The previous verified release,
-> [`2026.09.02-r2`](https://github.com/soulteary/docker-sqlite-wordpress/releases/tag/2026.09.02-r2),
+> [`2026.09.03-r1`](https://github.com/soulteary/docker-sqlite-wordpress/releases/tag/2026.09.03-r1),
 > remains available from Docker Hub and GHCR with matching manifest digest
-> `sha256:9a5ceb20d80485de3e71bfe4a454f913408c6cdc995df17c2805e90fea5a049a`.
-> Until the protected `2026.09.03-r1` tag succeeds in both registries, build
+> `sha256:61c3ac9fa44c28a36dd77415e1563281711134dcb9a9a4979ed601d6039a3812`.
+> Until the protected `2026.09.10-r1` tag succeeds in both registries, build
 > current `main` as shown in Quick Start. The existing `latest` alias still
 > represents the previous release and does not include this candidate's fixes.
 
@@ -21,7 +21,7 @@ WordPress with SQLite, ready to use out of the box.
 
 ## Native MySQL Parser Extension
 
-The image bundles WordPress `7.1.0` on PHP 8.5/Apache and [`sqlite-database-integration`](https://github.com/WordPress/sqlite-database-integration) `v3.0.1` together with its optional native Rust extension `wp_mysql_parser`. The extension is compiled and enabled on `amd64` and `arm64`; published 32-bit ARM variants use the plugin's pure-PHP fallback. The SQLite driver detects the available implementation automatically (the upstream project reports roughly 4.8x faster lexing and 15.5x faster parsing for the native path).
+The image bundles WordPress `7.1.0` on PHP 8.5/Apache and [`sqlite-database-integration`](https://github.com/WordPress/sqlite-database-integration) `v3.0.2` together with its optional native Rust extension `wp_mysql_parser`. The extension is compiled and enabled on `amd64` and `arm64`; published 32-bit ARM variants use the plugin's pure-PHP fallback. The SQLite driver detects the available implementation automatically (the upstream project reports roughly 4.8x faster lexing and 15.5x faster parsing for the native path).
 
 Verify it is loaded inside the container:
 
@@ -61,7 +61,7 @@ docker exec -it <container> ls -l /var/www/html/wp-content/mu-plugins/
 
 ## Quick Start
 
-Until `2026.09.03-r1` is published, build current `main` locally:
+Until `2026.09.10-r1` is published, build current `main` locally:
 
 ```bash
 docker build -t sqlite-wordpress:main .
@@ -74,11 +74,11 @@ convenience or the immutable CalVer release for reproducible deployments:
 # Docker Hub: use latest
 docker pull soulteary/sqlite-wordpress
 # Docker Hub: use an immutable release
-docker pull soulteary/sqlite-wordpress:2026.09.03-r1
+docker pull soulteary/sqlite-wordpress:2026.09.10-r1
 # GHCR: use latest
 docker pull ghcr.io/soulteary/sqlite-wordpress:latest
 # GHCR: use an immutable release
-docker pull ghcr.io/soulteary/sqlite-wordpress:2026.09.03-r1
+docker pull ghcr.io/soulteary/sqlite-wordpress:2026.09.10-r1
 ```
 
 Launch the locally built image on port `8080`:
@@ -263,7 +263,7 @@ fit for local development and many small or read-heavy sites, but MySQL or
 MariaDB may be more appropriate for workloads with sustained concurrent writes.
 Before production use, test the expected traffic, themes, plugins, scheduled
 jobs, and backup/restore procedure. See the upstream
-[`sqlite-database-integration` production and migration guidance](https://github.com/WordPress/sqlite-database-integration/blob/v3.0.1/packages/plugin-sqlite-database-integration/readme.txt)
+[`sqlite-database-integration` production and migration guidance](https://github.com/WordPress/sqlite-database-integration/blob/v3.0.2/packages/plugin-sqlite-database-integration/readme.txt)
 for the underlying compatibility boundary.
 
 ## Emergency Site URL Recovery Tool
@@ -540,7 +540,7 @@ refuses Multisite installations.
 ## Volume and Upgrade Notes
 
 Back up `wp-content/database/` before upgrading an existing site to the
-WordPress 7.1.0 / SQLite Database Integration 3.0.1 image. Version 3.0.1
+WordPress 7.1.0 / SQLite Database Integration 3.0.2 image. The v3 integration
 requires a non-empty `DB_NAME` in custom `wp-config.php` files and uses WAL
 journaling by default, so the database's `-wal` and `-shm` sidecar files must
 remain on the same persistent volume as the main SQLite file.
