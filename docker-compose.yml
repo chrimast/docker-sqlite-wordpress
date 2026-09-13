@@ -1,11 +1,50 @@
-version: '3'
-
 services:
 
   wordpress:
-    image: soulteary/sqlite-wordpress:6.5.2
+    build:
+      context: .
+    image: sqlite-wordpress:main
     restart: always
     ports:
-      - 8080:80
+      # Safe local default. Replace 127.0.0.1 only when intentionally publishing
+      # the site through a firewall or TLS reverse proxy. Keep the recovery path
+      # private or IP-allowlisted whenever the tool is enabled.
+      - 127.0.0.1:8080:80
+    environment:
+      # Emergency site URL recovery stays disabled during normal operation.
+      # To use the short-lived PASSWORD mode, export both host variables and
+      # run `docker compose up -d --force-recreate`. Generate the password with:
+      # `export WORDPRESS_SITE_URL_UPDATE_PASSWORD="$(openssl rand -base64 24)"`
+      # `export WORDPRESS_SITE_URL_UPDATE_TOOL_ENABLED=true`
+      WORDPRESS_SITE_URL_UPDATE_TOOL_ENABLED: "${WORDPRESS_SITE_URL_UPDATE_TOOL_ENABLED:-false}"
+      WORDPRESS_SITE_URL_UPDATE_PASSWORD: "${WORDPRESS_SITE_URL_UPDATE_PASSWORD:-}"
+
+      # Emergency local user password reset. Enable only for one short-lived
+      # reset session, then remove both variables and recreate the container.
+      # `export WORDPRESS_USER_PASSWORD_RESET_PASSWORD="$(openssl rand -base64 24)"`
+      # `export WORDPRESS_USER_PASSWORD_RESET_TOOL_ENABLED=true`
+      WORDPRESS_USER_PASSWORD_RESET_TOOL_ENABLED: "${WORDPRESS_USER_PASSWORD_RESET_TOOL_ENABLED:-false}"
+      WORDPRESS_USER_PASSWORD_RESET_PASSWORD: "${WORDPRESS_USER_PASSWORD_RESET_PASSWORD:-}"
+
+      # The matching checksummed WordPress core package is used by the normal
+      # updater by default. Set the exact value false to require remote packages.
+      WORDPRESS_LOCAL_CORE_UPDATE_ENABLED: "${WORDPRESS_LOCAL_CORE_UPDATE_ENABLED:-true}"
+
+      # Optional page timing and PHP memory display. Uncomment to control it
+      # through Compose; leave it absent to use Settings -> Page Performance.
+      # WORDPRESS_PAGE_PERFORMANCE_ENABLED: "true"
+
+      # TOKEN_FILE is preferred for shared or internet-reachable hosts. Uncomment
+      # this line and the service/top-level secrets blocks below. Leave PASSWORD
+      # unset or empty: TOKEN_FILE and PASSWORD are mutually exclusive.
+      # WORDPRESS_SITE_URL_UPDATE_TOKEN_FILE: /run/secrets/site-url-update-token
+      # WORDPRESS_USER_PASSWORD_RESET_TOKEN_FILE: /run/secrets/user-password-reset-token
+    # secrets:
+    #   - site-url-update-token
     volumes:
       - ./wordpress:/var/www/html
+
+# Preferred TOKEN_FILE definition:
+# secrets:
+#   site-url-update-token:
+#     file: ./secrets/site-url-update-token
