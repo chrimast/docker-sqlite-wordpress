@@ -4,15 +4,11 @@
 
 WordPress with SQLite, ready to use out of the box.
 
-<!-- release-availability: pending -->
-> **Container release availability:** `2026.09.10-r1` is prepared but is not
-> published yet as a verified container image. The previous verified release,
-> [`2026.09.03-r1`](https://github.com/soulteary/docker-sqlite-wordpress/releases/tag/2026.09.03-r1),
-> remains available from Docker Hub and GHCR with matching manifest digest
-> `sha256:61c3ac9fa44c28a36dd77415e1563281711134dcb9a9a4979ed601d6039a3812`.
-> Until the protected `2026.09.10-r1` tag succeeds in both registries, build
-> current `main` as shown in Quick Start. The existing `latest` alias still
-> represents the previous release and does not include this candidate's fixes.
+> **Published container release:** [`2026.10.12-r1`](https://github.com/soulteary/docker-sqlite-wordpress/releases/tag/2026.10.12-r1)
+> is available from Docker Hub and GHCR as matching five-platform indexes at
+> `sha256:e060cc1abb7940bb2e50c4e54ded85b6dbd7fd66d7361f249180d36125e9e373`.
+> Per-platform SBOM and provenance evidence and both registry signatures passed
+> verification.
 
 - Based on [official image](https://hub.docker.com/_/wordpress), Easier and more sustainable solution.
 - DockerHub Page: https://hub.docker.com/r/soulteary/sqlite-wordpress
@@ -21,7 +17,7 @@ WordPress with SQLite, ready to use out of the box.
 
 ## Native MySQL Parser Extension
 
-The image bundles WordPress `7.1.0` on PHP 8.5/Apache and [`sqlite-database-integration`](https://github.com/WordPress/sqlite-database-integration) `v3.0.2` together with its optional native Rust extension `wp_mysql_parser`. The extension is compiled and enabled on `amd64` and `arm64`; published 32-bit ARM variants use the plugin's pure-PHP fallback. The SQLite driver detects the available implementation automatically (the upstream project reports roughly 4.8x faster lexing and 15.5x faster parsing for the native path).
+The image bundles WordPress `7.1.0` on PHP 8.5/Apache and [`sqlite-database-integration`](https://github.com/WordPress/sqlite-database-integration) `v3.1.0` together with its optional native Rust extension `wp_mysql_parser`. The extension is compiled and enabled on `amd64` and `arm64`; published 32-bit ARM variants use the plugin's pure-PHP fallback. The SQLite driver detects the available implementation automatically (the upstream project reports roughly 4.8x faster lexing and 15.5x faster parsing for the native path).
 
 Verify it is loaded inside the container:
 
@@ -61,32 +57,26 @@ docker exec -it <container> ls -l /var/www/html/wp-content/mu-plugins/
 
 ## Quick Start
 
-Until `2026.09.10-r1` is published, build current `main` locally:
-
-```bash
-docker build -t sqlite-wordpress:main .
-```
-
-After the protected release workflow succeeds, pull the rolling tag for
-convenience or the immutable CalVer release for reproducible deployments:
+Pull the rolling tag for convenience or the immutable CalVer release for
+reproducible deployments:
 
 ```bash
 # Docker Hub: use latest
 docker pull soulteary/sqlite-wordpress
 # Docker Hub: use an immutable release
-docker pull soulteary/sqlite-wordpress:2026.09.10-r1
+docker pull soulteary/sqlite-wordpress:2026.10.12-r1
 # GHCR: use latest
 docker pull ghcr.io/soulteary/sqlite-wordpress:latest
 # GHCR: use an immutable release
-docker pull ghcr.io/soulteary/sqlite-wordpress:2026.09.10-r1
+docker pull ghcr.io/soulteary/sqlite-wordpress:2026.10.12-r1
 ```
 
-Launch the locally built image on port `8080`:
+Launch the published image on port `8080`:
 
 ```bash
 docker run --rm -it -p 127.0.0.1:8080:80 \
   -v "$(pwd)/wordpress:/var/www/html" \
-  sqlite-wordpress:main
+  soulteary/sqlite-wordpress:2026.10.12-r1
 ```
 
 You can also use docker compose to start wordpress:
@@ -95,9 +85,7 @@ You can also use docker compose to start wordpress:
 services:
 
   wordpress:
-    build:
-      context: .
-    image: sqlite-wordpress:main
+    image: soulteary/sqlite-wordpress:2026.10.12-r1
     restart: always
     ports:
       # Safe local default. Change this only when intentionally publishing the
@@ -107,7 +95,7 @@ services:
       - ./wordpress:/var/www/html
 ```
 
-Save the file as `docker-compose.yml` and execute `docker compose up --build`,
+Save the file as `docker-compose.yml` and execute `docker compose up -d`,
 then use a browser to access `localhost:8080`.
 
 ![](.github/ready-to-use.jpg)
@@ -236,7 +224,7 @@ OwlMail listener publicly.
 
 ## Image Versions and Supply-chain Evidence
 
-Image releases use CalVer such as `2026.09.02-r2`; WordPress and SQLite
+Image releases use CalVer such as `2026.10.12-r1`; WordPress and SQLite
 Integration keep their own component versions. Exact `YYYY.MM.DD-rN` tags are
 immutable, while the date-only tag and `latest` are verified mutable aliases.
 Pin an exact tag or manifest digest in production. See
@@ -263,7 +251,7 @@ fit for local development and many small or read-heavy sites, but MySQL or
 MariaDB may be more appropriate for workloads with sustained concurrent writes.
 Before production use, test the expected traffic, themes, plugins, scheduled
 jobs, and backup/restore procedure. See the upstream
-[`sqlite-database-integration` production and migration guidance](https://github.com/WordPress/sqlite-database-integration/blob/v3.0.2/packages/plugin-sqlite-database-integration/readme.txt)
+[`sqlite-database-integration` production and migration guidance](https://github.com/WordPress/sqlite-database-integration/blob/v3.1.0/packages/plugin-sqlite-database-integration/readme.txt)
 for the underlying compatibility boundary.
 
 ## Emergency Site URL Recovery Tool
@@ -342,7 +330,7 @@ chmod 600 secrets/site-url-update-token
 services:
 
   wordpress:
-    image: soulteary/sqlite-wordpress:2026.09.02-r2
+    image: soulteary/sqlite-wordpress:2026.10.12-r1
     ports:
       - 127.0.0.1:8080:80
     environment:
@@ -372,7 +360,7 @@ export WORDPRESS_SITE_URL_UPDATE_PASSWORD="$(openssl rand -base64 24)"
 services:
 
   wordpress:
-    image: soulteary/sqlite-wordpress:2026.09.02-r2
+    image: soulteary/sqlite-wordpress:2026.10.12-r1
     ports:
       - 127.0.0.1:8080:80
     environment:
@@ -400,7 +388,7 @@ docker run --rm -it \
   --volume "$(pwd)/secrets/site-url-update-token:/run/secrets/site-url-update-token:ro" \
   --env WORDPRESS_SITE_URL_UPDATE_TOOL_ENABLED=true \
   --env WORDPRESS_SITE_URL_UPDATE_TOKEN_FILE=/run/secrets/site-url-update-token \
-  soulteary/sqlite-wordpress:2026.09.02-r2
+  soulteary/sqlite-wordpress:2026.10.12-r1
 ```
 
 For PASSWORD, export a fresh value and pass only the variable name so the shell
@@ -414,7 +402,7 @@ docker run --rm -it \
   --volume "$(pwd)/wordpress:/var/www/html" \
   --env WORDPRESS_SITE_URL_UPDATE_TOOL_ENABLED=true \
   --env WORDPRESS_SITE_URL_UPDATE_PASSWORD \
-  soulteary/sqlite-wordpress:2026.09.02-r2
+  soulteary/sqlite-wordpress:2026.10.12-r1
 ```
 
 After the update, stop this temporary container and start the normal deployment
@@ -540,10 +528,22 @@ refuses Multisite installations.
 ## Volume and Upgrade Notes
 
 Back up `wp-content/database/` before upgrading an existing site to the
-WordPress 7.1.0 / SQLite Database Integration 3.0.2 image. The v3 integration
+WordPress 7.1.0 / SQLite Database Integration 3.1.0 image. The v3 integration
 requires a non-empty `DB_NAME` in custom `wp-config.php` files and uses WAL
 journaling by default, so the database's `-wal` and `-shm` sidecar files must
 remain on the same persistent volume as the main SQLite file.
+
+SQLite Integration 3.1 migrates default `.ht.sqlite` and `.ht.sqlite.php`
+databases into a randomized directory under `wp-content/database/`, recorded
+in `wp-content/database/db-path.php`. Persist and back up the entire database
+directory, including the path record and WAL/SHM sidecars. Backup tools should
+read `DB_PATH` after WordPress loads instead of assuming a fixed filename.
+
+For an explicit database location, define `DB_PATH` in `wp-config.php` as an
+absolute file path outside the web root, on a persistent volume writable by
+PHP. Changing `DB_PATH` does not move an existing database. `DB_DIR` and
+`DB_FILE` are deprecated; conflicting legacy constants produce warnings,
+and relative paths are rejected.
 
 ### Updating Core in a Persistent Document Root
 
@@ -604,7 +604,7 @@ docker run --rm --user 0:0 \
   --mount type=bind,source="$(pwd)/wordpress",target=/source,readonly \
   --mount type=bind,source="$(pwd)/backups",target=/backup \
   --env "BACKUP_NAME=${backup_name}" \
-  soulteary/sqlite-wordpress:2026.09.02-r2 \
+  soulteary/sqlite-wordpress:2026.10.12-r1 \
   -Eeuo pipefail -c '
     [[ -n "${BACKUP_NAME}" && "${BACKUP_NAME}" != */* ]]
     archive="/backup/${BACKUP_NAME}"
@@ -639,7 +639,7 @@ docker run --rm --user 0:0 \
   --mount "type=volume,source=${wordpress_volume},target=/source,readonly" \
   --mount type=bind,source="$(pwd)/backups",target=/backup \
   --env "BACKUP_NAME=${backup_name}" \
-  soulteary/sqlite-wordpress:2026.09.02-r2 \
+  soulteary/sqlite-wordpress:2026.10.12-r1 \
   -Eeuo pipefail -c '
     [[ -n "${BACKUP_NAME}" && "${BACKUP_NAME}" != */* ]]
     archive="/backup/${BACKUP_NAME}"
@@ -672,7 +672,7 @@ docker run --rm --user 0:0 \
   --mount type=bind,source="$(pwd)/wordpress",target=/source \
   --mount type=bind,source="$(pwd)/backups",target=/backup,readonly \
   --env "BACKUP_NAME=${backup_name}" \
-  soulteary/sqlite-wordpress:2026.09.02-r2 \
+  soulteary/sqlite-wordpress:2026.10.12-r1 \
   -Eeuo pipefail -c '
     [[ -n "${BACKUP_NAME}" && "${BACKUP_NAME}" != */* ]]
     archive="/backup/${BACKUP_NAME}"
@@ -710,7 +710,7 @@ docker run --rm --user 0:0 \
   --mount "type=volume,source=${wordpress_volume},target=/source" \
   --mount type=bind,source="$(pwd)/backups",target=/backup,readonly \
   --env "BACKUP_NAME=${backup_name}" \
-  soulteary/sqlite-wordpress:2026.09.02-r2 \
+  soulteary/sqlite-wordpress:2026.10.12-r1 \
   -Eeuo pipefail -c '
     [[ -n "${BACKUP_NAME}" && "${BACKUP_NAME}" != */* ]]
     archive="/backup/${BACKUP_NAME}"
