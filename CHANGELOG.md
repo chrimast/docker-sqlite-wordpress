@@ -2,6 +2,29 @@
 
 ## [Unreleased]
 
+## [2026.10.22-r1] - 2026-10-22
+
+### Security
+
+- Require PHP 8.5.12 or newer in both build and runtime stages.
+- Pin WordPress 7.1.3 / PHP 8.5 Apache to multi-platform digest
+  `sha256:ce31904fa1e51b73543fa2e35cc8f1747589b2abf48dc747b422749b88b77e9e`.
+- Disable session upload progress and enable strict session mode.
+- Check the PHP version and session controls in every platform smoke test.
+
+### Upgrade notes
+
+- Back up the complete site and database, including WAL/SHM sidecars, then
+  recreate the container using the new exact image tag. Updating WordPress
+  files alone does not update the PHP runtime.
+### Release status
+
+- Published to Docker Hub and GHCR for amd64, arm64, arm/v7, arm/v6 and arm/v5
+  with matching manifest digest `sha256:f76f3017be7f860278b9006b5deb7d60e7a14975a257e418a1690fd0ecab5cd1`.
+- Per-platform SPDX SBOM, max-mode SLSA provenance and both registry keyless
+  signatures passed verification. The `2026.10.22` and `latest` aliases were
+  promoted without rebuilding.
+
 ## [2026.10.12-r1] - 2026-10-12
 
 ### Changed
