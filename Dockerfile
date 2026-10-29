@@ -107,17 +107,6 @@ RUN test -f "${WORDPRESS_PREPARE_DIR}/wp-content/mu-plugins/sqlite-database-inte
     grep -q 'SQLITE_DB_DROPIN_VERSION' "${WORDPRESS_PREPARE_DIR}/wp-content/db.php" && \
     ! grep -q '{SQLITE_IMPLEMENTATION_FOLDER_PATH}' "${WORDPRESS_PREPARE_DIR}/wp-content/db.php"
 
-# Enable the native MySQL parser extension when it was actually built.
-# On platforms where the build was skipped, the copied file is empty (a
-# placeholder), so we only register the extension when it contains a real .so.
-COPY --from=ext-builder /libwp_mysql_parser.so /usr/local/lib/php/extensions/wp_mysql_parser.so
-RUN if [ -s /usr/local/lib/php/extensions/wp_mysql_parser.so ]; then \
-      echo "extension=/usr/local/lib/php/extensions/wp_mysql_parser.so" > /usr/local/etc/php/conf.d/wp_mysql_parser.ini ; \
-    else \
-      echo "Native wp_mysql_parser extension not built for this platform; using PHP fallback." && \
-      rm -f /usr/local/lib/php/extensions/wp_mysql_parser.so ; \
-    fi
-
 # Wrap the stock entrypoint so the SQLite drop-in is (re)installed on any volume
 # state; CMD stays the base image's apache2-foreground.
 ENTRYPOINT ["docker-entrypoint-sqlite.sh"]

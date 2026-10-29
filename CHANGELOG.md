@@ -2,6 +2,35 @@
 
 ## [Unreleased]
 
+## [2026.10.29-r1] - 2026-10-29
+
+### Changed
+
+- Upgrade SQLite Database Integration from 3.1.0 to 3.1.2, pinned to upstream
+  commit `dd0bcd6f1a52b79c934b33ec6a3dc4b20811225a`.
+- Remove the Rust parser toolchain and extension packaging following upstream's
+  removal; use the PHP parser on every supported platform and verify this in CI.
+  Retain only the unused Rust version argument required by the pinned release
+  validator until that shared validator supports extension-free builds.
+- Refresh the official WordPress 7.1.3/PHP 8.5 base manifest digest after
+  verifying the upstream PHP security gate.
+- Include configurable `SQLITE_BUSY_TIMEOUT`, transaction preservation after
+  failed statements, table rebuild and AUTO_INCREMENT fixes, and improved SQL
+  defaults, ALTER COLUMN, hexadecimal literal, and timestamp handling.
+
+### Release status
+
+- Published to Docker Hub and GHCR as matching five-platform indexes at
+  `sha256:422486f00ff1a53bbb8245a18341d91337d608b69521c893e7c5d5fba9b31500`.
+  Per-platform SPDX SBOM, max-mode SLSA provenance, and both registry signatures
+  passed verification.
+
+### Upgrade notes
+
+- Back up the complete site and SQLite database, including WAL/SHM sidecars,
+  before recreating the container. Preserve the persistent database path files.
+- The native `wp_mysql_parser` extension is no longer bundled on amd64 or arm64.
+
 ## [2026.10.22-r1] - 2026-10-22
 
 ### Security
