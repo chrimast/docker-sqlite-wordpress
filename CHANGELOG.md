@@ -2,7 +2,20 @@
 
 ## [Unreleased]
 
+## [2026.11.03-r1] - 2026-11-03
+
+### Release status
+
+- Published matching five-platform indexes to Docker Hub and GHCR at
+  `sha256:a0bd965cdfcfd48d882375652a7457630dc6bc39cd2b762623199f2b866918e6`. SBOM, provenance, signatures,
+  and date/latest alias promotion passed verification.
+
 ### Changed
+
+- Upgrade SQLite Database Integration from 3.1.2 to 3.1.3, pinned to upstream
+  commit `f05c1f9eecf13ff2f387c4be8acf1ae3befaa537`.
+- Include upstream fixes for binary column defaults, identifier quoting, lexer
+  correctness, and reserved-prefix checks.
 
 - Pin the optional OwlMail SMTP overlay to 0.13.0, add an explicit native healthcheck for the existing service_healthy dependency, retaining private SMTP networking, the complete mail volume and configuration precedence. Document backup, durable Relay recovery and rollback requirements from the old 0.5.0 overlay.
 
@@ -391,7 +404,11 @@
 - SQLite Database Integration 3.0.0 uses WAL journaling by default; keep the database, `-wal`, and `-shm` files on the same persistent volume.
 - The native `wp_mysql_parser` extension is built for amd64 and arm64. Other published platforms use the integration's pure-PHP parser fallback.
 
-[Unreleased]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.10-r1...HEAD
+[Unreleased]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.11.03-r1...HEAD
+[2026.11.03-r1]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.10.29-r1...2026.11.03-r1
+[2026.10.29-r1]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.10.22-r1...2026.10.29-r1
+[2026.10.22-r1]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.10.12-r1...2026.10.22-r1
+[2026.10.12-r1]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.10-r1...2026.10.12-r1
 [2026.09.10-r1]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.03-r1...2026.09.10-r1
 [2026.09.03-r1]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.02-r2...2026.09.03-r1
 [2026.09.02-r2]: https://github.com/soulteary/docker-sqlite-wordpress/compare/2026.09.02-r1...2026.09.02-r2
