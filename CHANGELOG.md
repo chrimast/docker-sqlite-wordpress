@@ -2,6 +2,32 @@
 
 ## [Unreleased]
 
+## [2026.11.11-r1] - 2026-11-11
+
+### Fixed
+
+- Set PHP defaults to `upload_max_filesize=32M` and `post_max_size=40M`, replacing
+  the inherited 2 MiB upload limit. WordPress reports 32 MiB on a default
+  single-site installation.
+- Check both PHP settings and the effective WordPress upload limit in the
+  existing multi-platform image smoke tests.
+
+### Upgrade notes
+
+- Recreate the container with the new image to apply the PHP defaults. No
+  WordPress content or database changes are required.
+- Custom PHP configuration, WordPress filters, multisite settings, plugins, or
+  reverse proxies may impose lower limits. A file mounted after
+  `00-wordpress-uploads.ini` can override the image defaults.
+- WordPress, PHP base image, and SQLite Database Integration pins are unchanged.
+
+### Release status
+
+- Published matching five-platform indexes to Docker Hub and GHCR at
+  `sha256:3081fea3813932baeef817fea17c360b86f24e78ae16074ec90638b8211276bf`.
+  Per-platform SBOM, provenance, both registry signatures, and date/latest alias
+  promotion passed verification.
+
 ## [2026.11.03-r1] - 2026-11-03
 
 ### Release status
